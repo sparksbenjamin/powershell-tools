@@ -1,0 +1,14 @@
+ param(
+        [Parameter(Position=0,mandatory=$true)]
+        [string]$GroupName
+        )
+$g = Get-ADGroup $GroupName
+#$g
+Get-ADComputer -Filter * | foreach {
+    Get-ADComputer -Identity $_.ObjectGUID -Properties * | foreach {
+        if ($_.Memberof -contains $g.DistinguishedName){
+            Write-Output "$_.Name"
+         }
+        
+    }
+}
